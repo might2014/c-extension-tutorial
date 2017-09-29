@@ -1,0 +1,21 @@
+Setup
+
+Once you are logged in, run the following commands to build your environment. This will also build the tutorial documentation.
+
+git clone --recursive https://github.com/llllllllll/c-extension-tutorial.git
+cd c-extension-tutorial
+source etc/setup-env
+When this is done you need to change the permissions of your home directory on the VM in order to view the tutorial documentation.
+
+chmod o+x $HOME
+
+Now you can view the documentation at the following URL.
+if have webserver, try http://IP/~username/   ???
+
+
+
+objgraph (https://mg.pov.lt/objgraph/   ???) print gc graph by using traverse call
+sys get refcount
+lvalue might have 1 more than actual refcount
+
+gdb reverse debugging
