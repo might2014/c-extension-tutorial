@@ -1,4 +1,5 @@
 #include <Python.h>
+#include <stdio.h>
 
 static unsigned long
 cfib(unsigned long n)
@@ -25,9 +26,66 @@ PyDoc_STRVAR(fib_doc, "compute the nth Fibonacci number");
 static PyObject*
 pyfib(PyObject* self, PyObject* n)
 {
+    
     unsigned long as_unsigned_long = PyLong_AsUnsignedLong(n);
-    PyObject* result = PyLong_FromUnsignedLong(cfib(as_unsigned_long));
-    return result;
+    if(PyErr_Occurred() != NULL)
+    {
+	return NULL;
+
+    }   
+
+    PyObject* a = PyLong_FromUnsignedLong(1);
+    PyObject* b = PyLong_FromUnsignedLong(1);
+    PyObject* c = NULL;
+
+    if (as_unsigned_long <= 1) {
+        Py_XDECREF(a);
+        Py_XDECREF(b);
+        Py_XDECREF(c);
+        return PyLong_FromUnsignedLong(1);
+    }
+
+    while (--as_unsigned_long > 1) {
+        printf("%lu\n", as_unsigned_long);
+        if(c != NULL)
+        {
+            printf("%s, %d\n",__FILE__, __LINE__);
+            Py_XDECREF(c);
+        }
+
+        printf("%s, %d\n",__FILE__, __LINE__);
+        c = PyNumber_Add(a, b);
+        if(c == NULL)
+        {
+            return NULL;
+        }
+
+        printf("%s, %d\n",__FILE__, __LINE__);
+        Py_XDECREF(a);
+        printf("%s, %d\n",__FILE__, __LINE__);
+        a = b;
+        printf("%s, %d\n",__FILE__, __LINE__);
+        //b equal to a now, probably why this is crashing
+        Py_XDECREF(b);
+        printf("%s, %d\n",__FILE__, __LINE__);
+        b = c;
+    }
+
+    printf("%s, %d\n",__FILE__, __LINE__);
+    Py_XDECREF(a);
+    printf("%s, %d\n",__FILE__, __LINE__);
+    //c equal to b now, this will cause result to be de-allocated
+    //Py_XDECREF(c);
+    return b;
+
+    /*
+     *
+     * TODO: add GOTO error handling for ref counting cleanup
+     */
+
+    //PyObject* result = PyLong_FromUnsignedLong(cfib(as_unsigned_long));
+    //return result;
+
 }
 
 PyMethodDef methods[] = {
